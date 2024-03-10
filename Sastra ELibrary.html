@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sastra ELibrary</title>
+<style>
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+
+h1 {
+  text-align: center; /* Center align heading */
+  margin-bottom: 20px;
+}
+
+
+.section:hover {
+  transform: scale(1.03); /* Slightly larger on hover */
+}
+
+.section h2 {
+  margin-bottom: 10px;
+}
+
+/* Popup Styles */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 999;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  max-width: 90%; /* Make popups responsive */
+  width: 300px; /* Set a fixed width */
+}
+
+.popup.active {
+  display: block;
+  opacity: 1;
+}
+
+.popup h2 {
+  margin-top: 0;
+}
+
+.popup-content {
+  text-align: center;
+}
+
+.popup-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.popup-button:nth-child(1) {
+  background-color: #ff6666; /* Red for Grade Estimation */
+  color: #fff;
+}
+
+.popup-button:nth-child(2) {
+  background-color: #66ccff; /* Blue for Class Skippability */
+  color: #fff;
+}
+
+.popup-button:nth-child(3) {
+  background-color: #ffcc66; /* Yellow for SGPA Calculator */
+  color: #fff;
+}
+
+.popup-button:nth-child(4) {
+  background-color: #99ff99; /* Green for CGPA Calculator */
+  color: #fff;
+}
+
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Subject fields */
+#subjectFields {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Subject field */
+#subjectFields > div {
+  margin-bottom: 10px;
+}
+
+/* Remove button */
+#subjectFields button {
+  margin-left: 5px;
+}
+
+/* SGPA result */
+#sgpaResult {
+  margin-top: 10px;
+}
+
+/* Close Button */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  color: #888;
+}
+
+/* CSS for Popup Content */
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* CSS for Input Fields */
+.input-group {
+  margin-bottom: 10px;
+}
+
+.input-group label {
+  margin-right: 10px;
+}
+/* Search Styles */
+.search-container {
+  text-align: center;
+  margin-bottom: 30px; /* Increase the gap three times more */
+}
+
+/* Sections Styles */
+.section {
+  background-color: #fff;
+  border-radius: 5px;
+  margin-bottom: 30px; /* Increase the gap three times more */
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+
+.search-container input[type="text"] {
+  padding: 10px;
+  width: calc(100% - 40px); /* Adjust width to accommodate button and reduce gap */
+  max-width: 300px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  margin-right: 10px;
+  box-sizing: border-box;
+}
+
+/* Sections Styles */
+.section {
+  background-color: #fff;
+  border-radius: 5px;
+  margin-bottom: 10px; /* Increase the minimal gap */
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Sastra ELibrary</h1>
+<!-- Search Container -->
+<div class="search-container">
+  <input type="text" id="searchInput" placeholder="Search..." oninput="showDropdown()">
+  <button onclick="searchSections()">Search</button>
+  <div id="dropdown" class="dropdown-content"></div>
+</div>
+
+<!-- Sections (Buttons) -->
+<div class="container" id="sectionsContainer">
+  <!-- Your sections/buttons here -->
+</div>
+
+
+<!-- Sections (Buttons) -->
+<div class="container" id="sectionsContainer">
+  <!-- Your sections/buttons here -->
+</div>
+
+<!-- Sections (Buttons) -->
+<div class="container" id="sectionsContainer">
+  <!-- Your sections/buttons here -->
+</div>
+
+
+<!-- Sections (Buttons) -->
+<div class="container" id="sectionsContainer">
+  <!-- Your sections/buttons here -->
+</div>
+
+
+<!-- Sections (Buttons) -->
+<div class="container" id="sectionsContainer">
+  <!-- Your sections/buttons here -->
+</div>
+
+<!-- Sections (Buttons) -->
+<div class="container">
+  <div class="section" style="background-color: #66ccff;" onclick="togglePopup('ACADEMICUTILITIES')">
+    <h2>Academic Utilities</h2>
+    <!-- Add content for ACADEMIC UTILITIES -->
+  </div>
+</div>
+<!-- Popup for ACADEMIC UTILITIES -->
+<div id="popupACADEMICUTILITIES" class="popup">
+  <span class="close-button" onclick="togglePopup('ACADEMICUTILITIES')">X</span>
+  <h2>ACADEMIC UTILITIES </h2>
+  <div class="popup-content">
+    <button class="popup-button" onclick="openGradeEstimation()">GRADE ESTIMATION</button>
+    <button class="popup-button" onclick="openClassSkippability()">CLASS SKIPPABILITY</button>
+    <button class="popup-button" onclick="openSgpaCalculator()">SGPA CALCULATOR</button>
+    <button class="popup-button" onclick="openCgpaCalculator()">CGPA CALCULATOR</button>
+  </div>
+</div>
+<!-- Popup for Grade Estimation -->
+<div id="popupGradeEstimation" class="popup">
+  <span class="close-button" onclick="closePopup('popupGradeEstimation')">X</span>
+  <h2>Grade Estimation</h2>
+  <br>
+  <div class="popup-content">
+    <label for="internalMarks">Enter Internal Marks:</label>
+    <input type="number" id="internalMarks" name="internalMarks" min="0" max="50">
+    <br>
+    <button onclick="calculateGradeEstimation()">Estimate Grades</button>
+    <div id="gradeEstimationResult"></div>
+  </div>
+  <!-- Add content for Grade Estimation popup -->
+</div>
+
+<!-- Popup for Class Skippability -->
+<div id="popupClassSkippability" class="popup">
+  <span class="close-button" onclick="closePopup('popupClassSkippability')">X</span>
+  <h2>Class Skippability</h2>
+   <div class="popup-content">
+        <div class="input-group">
+            <label for="credits">Enter Credits:</label>
+            <input type="number" id="credits" name="credits" min="18" max="25">
+        </div>
+        <div class="input-group">
+            <label for="skippedClasses">Enter Skipped Classes:</label>
+            <input type="number" id="skippedClasses" name="skippedClasses" min="0">
+        </div>
+     <br>
+        <button onclick="calculateSkippedClasses()">Calculate</button>
+     <br>
+        <div id="skippableClassesResult"></div>
+    </div>
+  <!-- Add content for Class Skippability popup -->
+</div>
+
+<!-- Popup for SGPA Calculator -->
+<div id="popupSgpaCalculator" class="popup">
+  <span class="close-button" onclick="closePopup('popupSgpaCalculator')">X</span>
+  <h2>SGPA Calculator</h2>
+   <div class="popup-content">
+    <label for="numSubjects">Number of Subjects:</label>
+    <input type="number" id="numSubjects" name="numSubjects" min="1" value="1" onchange="updateSubjects()">
+    <div id="subjectFields"></div>
+    <br>
+    <button onclick="calculateSgpa()">Calculate SGPA</button>
+    <div id="sgpaResult"></div>
+  </div>
+  <!-- Add content for SGPA Calculator popup -->
+</div>
+
+<!-- Popup for CGPA Calculator -->
+<div id="popupCgpaCalculator" class="popup">
+  <span class="close-button" onclick="closePopup('popupCgpaCalculator')">X</span>
+  <h2>CGPA Calculator</h2>
+   <div class="popup-content">
+    <label for="numSemesters">Number of Semesters:</label>
+    <input type="number" id="numSemesters" name="numSemesters" min="1">
+    <div id="semesterInputs"></div>
+     <br>
+    <button onclick="calculateCGPA()">Calculate CGPA</button>
+    <div id="cgpaResult"></div>
+     </div>
+  <!-- Add content for CGPA Calculator popup -->
+</div>
+
+ <div class="section" style="background-color: #ffd966;">
+  <h2><a href="https://www.sastra.edu/academic-updates.html" target="_blank">Academic Updates</a></h2>
+  <!-- Add content for ACADEMIC UPDATES -->
+</div>
+
+
+  <div class="section" style="background-color: #ff8080;" onclick="togglePopup('BTECH')">
+    <h2>B.TECH</h2>
+    <!-- Books for B.TECH -->
+    <!-- Add books or links here -->
+  </div>
+  
+  <div class="section" style="background-color: #80b3ff;" onclick="togglePopup('BCA')">
+    <h2>BCA</h2>
+    <!-- Books for BCA -->
+    <!-- Add books or links here -->
+  </div>
+  
+  <div class="section" style="background-color: #b3ffb3;" onclick="togglePopup('BCOM')">
+    <h2>BCOM</h2>
+    <!-- Books for BCOM -->
+    <!-- Add books or links here -->
+  </div>
+</div>
+
+</div>
+<!-- Popups for BTECH -->
+<div id="popupBTECH" class="popup">
+  <span class="close-button" onclick="togglePopup('BTECH')">X</span>
+  <h2>B.TECH Materials</h2>
+  <form onsubmit="return submitForm('BTECH')">
+    <label for="programBTECH">Program:</label>
+    <select id="programBTECH" name="programBTECH">
+      <option value="ECE">ECE</option>
+      <option value="CSE">CSE</option>
+    </select>
+    <label for="semesterBTECH">Semester:</label>
+    <select id="semesterBTECH" name="semesterBTECH">
+      <option value="1">Semester 1</option>
+      <option value="2">Semester 2</option>
+      <option value="3">Semester 3</option>
+      <option value="4">Semester 4</option>
+      <option value="5">Semester 5</option>
+      <option value="6">Semester 6</option>
+      <option value="7">Semester 7</option>
+     
+    </select>
+    <input type="submit" value="Submit">
+  </form>
+</div>
+
+
+<!-- Popups for BCA -->
+<div id="popupBCA" class="popup">
+  <span class="close-button" onclick="togglePopup('BCA')">X</span>
+  <h2>BCA </h2>
+  <p>Materials Uploading soon ...</p>
+  <!-- Add content for BCA popup -->
+</div>
+
+<!-- Popups for BCOM -->
+<div id="popupBCOM" class="popup">
+  <span class="close-button" onclick="togglePopup('BCOM')">X</span>
+  <h2>BCOM </h2>
+  <p>Materials Uploading soon ...</p>
+  <!-- Add content for BCOM popup -->
+</div>
+
+<div id="folderIconContainer"></div>
+<footer>
+  <p>&copy; 2024 Srinivas Penumarthi. All rights reserved. For help, contact <a href="mailto:srinivaspenumarthi2244@gmail.com">srinivaspenumarthi2244@gmail.com</a>.</p>
+</footer>
+
+  
+<script>
+
+// Function to toggle popup by id
+function togglePopup(popupId) {
+  var popup = document.getElementById(popupId);
+  popup.classList.toggle('active');
+}
+
+// Function to close popup by id
+function closePopup(popupId) {
+  var popup = document.getElementById(popupId);
+  popup.classList.remove('active');
+}
+
+// Function to open Grade Estimation popup
+function openGradeEstimationPopup() {
+  openPopup('popupGradeEstimation');
+}
+
+// Function to open Class Skippability popup
+function openClassSkippabilityPopup() {
+  openPopup('popupClassSkippability');
+}
+
+// Function to open SGPA Calculator popup
+function openSgpaCalculatorPopup() {
+  openPopup('popupSgpaCalculator');
+}
+
+// Function to open CGPA Calculator popup
+function openCgpaCalculatorPopup() {
+  openPopup('popupCgpaCalculator');
+}
+
+// Function to open popup by id
+function openPopup(popupId) {
+  var popup = document.getElementById(popupId);
+  popup.classList.add('active');
+}
+
+// Function to close popup by id
+function closePopup(popupId) {
+  var popup = document.getElementById(popupId);
+  popup.classList.remove('active');
+}
+
+// Function to calculate required marks for grade estimation
+
+
+function togglePopup(section) {
+  var popup = document.getElementById('popup' + section);
+  if (popup.classList.contains('active')) {
+    popup.classList.remove('active');
+  } else {
+    var popups = document.querySelectorAll('.popup');
+    popups.forEach(function(popup) {
+      popup.classList.remove('active');
+    });
+    popup.classList.add('active');
+  }
+}
+
+function submitForm(program) {
+  var semester = document.getElementById('semester' + program).value;
+  var programSelection = document.getElementById('program' + program).value;
+
+  // Define folder links for different combinations
+  var folderLinks = {
+    'ECE1': 'https://drive.google.com/drive/u/0/folders/1CWkJW87GIcDjZQ22X0ohCEDj1cLnKnlx',
+    'ECE2': 'https://drive.google.com/drive/u/0/folders/1CWkJW87GIcDjZQ22X0ohCEDj1cLnKnlx',
+    'ECE3': ' https://www.temporary-url.com/3BB22',
+    'ECE4': 'https://drive.google.com/drive/folders/1kXEZbQ0OMmZ_s4oa0UXLdP7PplcTwQZ6',
+    'ECE5': 'https://drive.google.com/drive/folders/1gOczbjqIymFWw9NBd3Qqjq3OB_4oOZXL',
+    'ECE6': 'https://drive.google.com/drive/folders/1N1DeqkBEKLvBdEjQLkio9mvrQJ4iBcW_',
+    'CSE1': 'https://drive.google.com/drive/u/0/folders/1CWkJW87GIcDjZQ22X0ohCEDj1cLnKnlx',
+    'CSE2': 'https://drive.google.com/drive/u/0/folders/1CWkJW87GIcDjZQ22X0ohCEDj1cLnKnlx',
+      'CSE3': 'https://drive.google.com/drive/u/0/folders/1MvlYBZ2QDFpcOP3FqqUapjTxCkH6SJQt',
+      'CSE4': 'https://drive.google.com/drive/u/0/folders/12lshcGhR0EvwkHgQozfVk6bp2MsCWr6S',
+      'CSE5': 'https://drive.google.com/drive/u/0/folders/1wePTXbNjTwsFbF7bVBzxH6k0RpgOCUwi',
+      'CSE6': 'https://drive.google.com/drive/u/0/folders/11X8ndrMRWlqgepbnbjEX46T08e-NEUcY',
+    'CSE7': 'https://drive.google.com/drive/u/0/folders/1-HEpyaQnS9SXSrfPAvgpUmQMFZ22xxhv',
+    
+    
+    // Add previous combinations here if necessary
+  };
+
+  // Check if the selected combination exists in folderLinks
+  var combination = programSelection + semester;
+  if (folderLinks.hasOwnProperty(combination)) {
+    var folderLink = folderLinks[combination];
+    if (folderLink.includes('sites.google.com')) {
+      // Open website link in the same tab
+      window.location.href = folderLink;
+    } else {
+      // Open Google Drive folder link in a new tab
+      window.open(folderLink, '_blank');
+    }
+  }
+
+  // Close the popup after form submission
+  togglePopup(program);
+
+  // Prevent default form submission
+  return false;
+}
+  // Function to open Grade Estimation popup
+function openGradeEstimation() {
+  openPopup('popupGradeEstimation');
+}
+
+// Function to open Class Skippability popup
+function openClassSkippability() {
+  openPopup('popupClassSkippability');
+}
+
+// Function to open SGPA Calculator popup
+function openSgpaCalculator() {
+  openPopup('popupSgpaCalculator');
+}
+
+// Function to open CGPA Calculator popup
+function openCgpaCalculator() {
+  openPopup('popupCgpaCalculator');
+}
+// Function to handle grade estimation calculation
+function calculateGradeEstimation() {
+  // Get the input field for internal marks
+  var internalMarksInput = document.getElementById('internalMarks');
+  
+  // Parse the value of internal marks to an integer
+  var internalMarks = parseInt(internalMarksInput.value);
+  
+  // Validate internal marks
+  if (isNaN(internalMarks) || internalMarks < 0 || internalMarks > 50) {
+    alert('Please enter valid internal marks between 0 and 50.');
+    return;
+  }
+  
+  // Calculate required marks for each grade
+  var requiredMarks = {
+    'S': (91 - internalMarks) * 2,
+    'A+': (86 - internalMarks) * 2,
+    'A': (76 - internalMarks) * 2,
+    'B': (66 - internalMarks) * 2,
+    'C': (55 - internalMarks) * 2,
+    'D': (50 - internalMarks) * 2
+  };
+
+  // Display the result in the gradeEstimationResult div
+  var gradeEstimationResult = document.getElementById('gradeEstimationResult');
+  gradeEstimationResult.innerHTML = '';
+  for (var grade in requiredMarks) {
+    var requiredMarksDisplay = requiredMarks[grade];
+    if (requiredMarksDisplay < 0 || requiredMarksDisplay > 100) {
+      requiredMarksDisplay = 'N/A';
+    } else {
+      requiredMarksDisplay = Math.round(requiredMarksDisplay * 100) / 100; // Round to 2 decimal places
+    }
+    gradeEstimationResult.innerHTML += '<div>' + grade +' '+'grade '+ ': ' + requiredMarksDisplay+' '+'marks' + '</div>';
+  }
+}
+function calculateSkippedClasses() {
+    // Get the input fields for credits and skipped classes
+    var creditsInput = document.getElementById('credits');
+    var skippedClassesInput = document.getElementById('skippedClasses');
+    
+    // Parse the values of credits and skipped classes to integers
+    var credits = parseInt(creditsInput.value);
+    var skippedClasses = parseInt(skippedClassesInput.value);
+    
+    // Validate credits and skipped classes
+    if (isNaN(credits) || credits < 18 || credits > 25) {
+        alert('Please enter valid credits between 18 and 25.');
+        return;
+    }
+    if (isNaN(skippedClasses) || skippedClasses < 0) {
+        alert('Please enter a valid number of skipped classes.');
+        return;
+    }
+    
+    // Calculate maximum skippable classes based on credits
+    var maxSkippableClasses;
+    switch (credits) {
+        case 18:
+            maxSkippableClasses = 57;
+            break;
+        case 19:
+            maxSkippableClasses = 60;
+            break;
+        case 20:
+            maxSkippableClasses = 64;
+            break;
+        case 21:
+            maxSkippableClasses = 67;
+            break;
+        case 22:
+            maxSkippableClasses = 70;
+            break;
+        case 23:
+            maxSkippableClasses = 73;
+            break;
+        case 24:
+            maxSkippableClasses = 76;
+            break;
+        case 25:
+            maxSkippableClasses = 80;
+            break;
+    }
+    
+    // Calculate the number of classes that can be skipped
+    var classesToSkip = maxSkippableClasses - skippedClasses;
+    if (classesToSkip < 0) {
+        classesToSkip = 0;
+    }
+    
+    // Display the result
+    var skippableClassesResult = document.getElementById('skippableClassesResult');
+    skippableClassesResult.innerHTML = 'you can skip ' + classesToSkip +''+'classes';
+}
+  // Function to add input fields for credits and SGPA for each semester
+function addSemesterInputs() {
+  var numSemesters = parseInt(document.getElementById('numSemesters').value);
+  var semesterInputs = document.getElementById('semesterInputs');
+  semesterInputs.innerHTML = '';
+
+  for (var i = 1; i <= numSemesters; i++) {
+    var semesterDiv = document.createElement('div');
+    semesterDiv.innerHTML = '<label for="creditsSemester' + i + '">Credits for Semester ' + i + ':</label>' +
+      '<input type="number" id="creditsSemester' + i + '" name="creditsSemester' + i + '" min="1">' +
+      '<label for="sgpaSemester' + i + '">SGPA for Semester ' + i + ':</label>' +
+      '<input type="number" id="sgpaSemester' + i + '" name="sgpaSemester' + i + '" min="0" max="10" step="0.01">';
+    semesterInputs.appendChild(semesterDiv);
+  }
+}
+  
+
+// Function to calculate CGPA
+function calculateCGPA() {
+  var numSemesters = parseInt(document.getElementById('numSemesters').value);
+  var totalCredits = 0;
+  var totalGradePoints = 0;
+
+  // Iterate over each semester to calculate total grade points and credits
+  for (var i = 1; i <= numSemesters; i++) {
+    var credits = parseInt(document.getElementById('creditsSemester' + i).value);
+    var sgpa = parseFloat(document.getElementById('sgpaSemester' + i).value);
+
+    if (isNaN(credits) || isNaN(sgpa) || credits < 1 || sgpa < 0 || sgpa > 10) {
+      alert('Please enter valid credits and SGPA for Semester ' + i + '.');
+      return;
+    }
+
+    totalCredits += credits;
+    totalGradePoints += credits * sgpa;
+  }
+
+  // Calculate CGPA
+  var cgpa = totalGradePoints / totalCredits;
+
+  // Display CGPA result
+  var cgpaResult = document.getElementById('cgpaResult');
+  cgpaResult.textContent = 'Your CGPA is: ' + cgpa.toFixed(2);
+}
+
+// Add event listener to update inputs when number of semesters changes
+document.getElementById('numSemesters').addEventListener('change', addSemesterInputs);
+
+// Call addSemesterInputs initially
+addSemesterInputs();
+// Function to update the number of subjects
+function updateSubjects() {
+  var numSubjects = parseInt(document.getElementById('numSubjects').value);
+  var subjectFields = document.getElementById('subjectFields');
+  subjectFields.innerHTML = '';
+
+  for (var i = 1; i <= numSubjects; i++) {
+    var subjectDiv = document.createElement('div');
+    subjectDiv.innerHTML = `
+      <div id="subject${i}">
+        <label for="creditsSubject${i}">Credits for Subject ${i}:</label>
+        <input type="number" id="creditsSubject${i}" name="creditsSubject${i}" min="1" required><br>
+        <label for="gradeSubject${i}">Grade for Subject ${i}:</label>
+        <select id="gradeSubject${i}" name="gradeSubject${i}" required>
+          <option value="S">S</option>
+          <option value="A+">A+</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+          <option value="F">F</option>
+        </select>
+        <button onclick="removeSubject(${i})">Remove</button>
+      </div><br>`;
+    subjectFields.appendChild(subjectDiv);
+  }
+}
+
+// Function to remove a subject
+function removeSubject(subjectIndex) {
+  var subject = document.getElementById('subject' + subjectIndex);
+  subject.parentNode.removeChild(subject);
+}
+
+// Function to calculate SGPA
+function calculateSgpa() {
+  var totalCredits = 0;
+  var totalGradePoints = 0;
+  var numSubjects = parseInt(document.getElementById('numSubjects').value);
+
+  for (var i = 1; i <= numSubjects; i++) {
+    var credits = parseInt(document.getElementById('creditsSubject' + i).value);
+    var grade = document.getElementById('gradeSubject' + i).value;
+
+    if (!isNaN(credits) && grade.match(/[SABCDF]/)) {
+      var gradePoints = getGradePoints(grade);
+      totalCredits += credits;
+      totalGradePoints += credits * gradePoints;
+    }
+  }
+
+  var sgpa = totalGradePoints / totalCredits;
+  document.getElementById('sgpaResult').innerHTML = 'SGPA: ' + sgpa.toFixed(2);
+}
+
+// Function to get grade points based on the grade
+function getGradePoints(grade) {
+  switch (grade) {
+    case 'S':
+      return 10;
+    case 'A+':
+      return 9;
+    case 'A':
+      return 8;
+    case 'B':
+      return 7;
+    case 'C':
+      return 6;
+    case 'D':
+      return 5;
+    case 'F':
+      return 2;
+    default:
+      return 0;
+  }
+}
+
+
+// Function to search sections based on input
+function searchSections() {
+  var query = document.getElementById("searchInput").value.trim().toUpperCase();
+  var sections = document.getElementsByClassName("section");
+
+  // Loop through all sections and show only those that match the search query
+  for (var i = 0; i < sections.length; i++) {
+    var section = sections[i];
+    var sectionName = section.textContent.trim().toUpperCase();
+    if (sectionName.indexOf(query) > -1) {
+      section.style.display = ""; // Show the section
+    } else {
+      section.style.display = "none"; // Hide the section
+    }
+  }
+}
+
+
+  </script>
+
+
+
+</body>
+</html>
